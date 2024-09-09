@@ -22,9 +22,16 @@ document.addEventListener('DOMContentLoaded', function() {
         li.innerHTML = `
             <span>${timezone}</span>
             <span class="time"></span>
+            <button class="remove-btn">Remove</button>
         `;
         timezoneList.appendChild(li);
         updateTimezones();
+        saveTimezone(timezone);
+
+        li.querySelector('.remove-btn').addEventListener('click', function() {
+            li.remove();
+            removeTimezone(timezone);
+        });
     }
 
     function updateTimezones() {
@@ -46,29 +53,99 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    addTimezoneBtn.addEventListener('click', function() {
-        const newTimezone = timezoneInput.value.trim();
-        if (newTimezone && moment.tz.zone(newTimezone)) {
-            addTimezone(newTimezone);
-            timezoneInput.value = '';
-        } else {
-            alert('Please enter a valid timezone from the list.');
+    function saveTimezone(timezone) {
+        fetch('/save_timezones', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ timezones: [timezone] })
+        })
+        .then(response => {
+            if (response.status === 401) {
+                window.location.href = '/login';
+                throw new Error('User not authenticated');
+            }
+            return response.json();
+        })
+        .then(result => {
+            console.log(result.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    function removeTimezone(timezone) {
+        fetch('/save_timezones', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ timezones: [], removed: timezone })
+        })
+        .then(response => {
+            if (response.status === 401) {
+                window.location.href = '/login';
+                throw new Error('User not authenticated');
+            }
+            return response.json();
+        })
+        .then(result => {
+            console.log(result.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+    function loadTimezones() {
+        if (!document.getElementById('timezone-list')) {
+            return;
         }
-    });
+        fetch('/get_timezones')
+        .then(response => {
+            if (response.status === 401) {
+                throw new Error('User not authenticated');
+            }
+            return response.json();
+        })
+        .then(timezones => {
+            timezoneList.innerHTML = '';
+            if (timezones && timezones.length > 0) {
+                timezones.forEach(addTimezone);
+            } else {
+                popularTimezones.forEach(addTimezone);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            if (error.message !== 'User not authenticated') {
+                popularTimezones.forEach(addTimezone);
+            }
+        });
+    }
 
-    // Initialize popular timezones
-    popularTimezones.forEach(addTimezone);
+    if (addTimezoneBtn) {
+        addTimezoneBtn.addEventListener('click', function() {
+            const newTimezone = timezoneInput.value.trim();
+            if (newTimezone && moment.tz.zone(newTimezone)) {
+                addTimezone(newTimezone);
+                timezoneInput.value = '';
+            } else {
+                alert('Please enter a valid timezone from the list.');
+            }
+        });
+    }
 
-    // Populate timezone options
     populateTimezoneOptions();
+    loadTimezones();
 
-    // Update time every second
     setInterval(() => {
         updateCurrentTime();
         updateTimezones();
     }, 1000);
 
-    // Initial update
     updateCurrentTime();
     updateTimezones();
 });

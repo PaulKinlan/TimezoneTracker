@@ -19,6 +19,42 @@ h1 {
     color: #333;
 }
 
+.user-controls {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.btn {
+    padding: 5px 10px;
+    font-size: 1em;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+.btn-logout {
+    background-color: #f44336;
+}
+
+.btn-logout:hover {
+    background-color: #d32f2f;
+}
+
+.btn-login, .btn-register {
+    background-color: #2196F3;
+}
+
+.btn-login:hover, .btn-register:hover {
+    background-color: #1976D2;
+}
+
 #current-time {
     font-size: 2em;
     text-align: center;
@@ -43,25 +79,19 @@ h1 {
 #add-timezone {
     display: flex;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 #timezone-input {
     flex-grow: 1;
     padding: 5px;
     font-size: 1em;
+    margin-right: 10px;
 }
 
-#add-timezone-btn {
-    padding: 5px 10px;
-    font-size: 1em;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-#add-timezone-btn:hover {
-    background-color: #45a049;
+#save-timezones-btn {
+    display: block;
+    margin: 0 auto;
 }
 
 @media (max-width: 600px) {
@@ -82,6 +112,12 @@ h1 {
     }
 
     #timezone-input {
+        margin-bottom: 10px;
+        margin-right: 0;
+    }
+
+    .btn {
+        width: 100%;
         margin-bottom: 10px;
     }
 }

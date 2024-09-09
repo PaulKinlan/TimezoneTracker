@@ -11,13 +11,31 @@
 <body>
     <div class="container">
         <h1>World Clock</h1>
-        <div id="current-time"></div>
-        <ul id="timezone-list"></ul>
-        <div id="add-timezone">
-            <input type="text" id="timezone-input" list="timezone-options" placeholder="Enter timezone (e.g., America/Chicago)">
-            <datalist id="timezone-options"></datalist>
-            <button id="add-timezone-btn">Add Timezone</button>
-        </div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% if current_user.is_authenticated %}
+            <div class='user-controls'>
+                <p>Welcome, {{ current_user.username }}! <a href='{{ url_for('logout') }}' class='btn btn-logout'>Logout</a></p>
+            </div>
+            <div id='current-time'></div>
+            <ul id='timezone-list'></ul>
+            <div id='add-timezone'>
+                <input type='text' id='timezone-input' list='timezone-options' placeholder='Enter timezone (e.g., America/Chicago)'>
+                <datalist id='timezone-options'></datalist>
+                <button id='add-timezone-btn' class='btn'>Add Timezone</button>
+            </div>
+        {% else %}
+            <div class='user-controls'>
+                <p><a href='{{ url_for('login') }}' class='btn btn-login'>Login</a> or <a href='{{ url_for('register') }}' class='btn btn-register'>Register</a></p>
+            </div>
+        {% endif %}
     </div>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
