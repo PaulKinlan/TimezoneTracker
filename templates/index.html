@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Clock</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>World Clock</h1>
+        <div id="current-time"></div>
+        <ul id="timezone-list"></ul>
+        <div id="add-timezone">
+            <input type="text" id="timezone-input" list="timezone-options" placeholder="Enter timezone (e.g., America/Chicago)">
+            <datalist id="timezone-options"></datalist>
+            <button id="add-timezone-btn">Add Timezone</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
