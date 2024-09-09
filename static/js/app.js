@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         li.innerHTML = `
             <span>${timezone}</span>
             <span class="time"></span>
+            <span class="dst-info"></span>
             <button class="remove-btn">Remove</button>
         `;
         timezoneList.appendChild(li);
@@ -39,8 +40,21 @@ document.addEventListener('DOMContentLoaded', function() {
         timezones.forEach(li => {
             const timezone = li.querySelector('span').textContent;
             const timeElement = li.querySelector('.time');
+            const dstInfoElement = li.querySelector('.dst-info');
             const time = moment().tz(timezone);
             timeElement.textContent = time.format('YYYY-MM-DD HH:mm:ss');
+            
+            // Check if the timezone is currently observing DST
+            const isDST = time.isDST();
+            const dstOffset = time.utcOffset() / 60; // Convert minutes to hours
+            
+            if (isDST) {
+                dstInfoElement.textContent = `DST: Yes (UTC${dstOffset >= 0 ? '+' : ''}${dstOffset})`;
+                dstInfoElement.style.color = 'green';
+            } else {
+                dstInfoElement.textContent = `DST: No (UTC${dstOffset >= 0 ? '+' : ''}${dstOffset})`;
+                dstInfoElement.style.color = 'red';
+            }
         });
     }
 

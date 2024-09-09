@@ -76,6 +76,19 @@ h1 {
     align-items: center;
 }
 
+#timezone-list li span {
+    margin-right: 10px;
+}
+
+#timezone-list li .time {
+    font-weight: bold;
+}
+
+#timezone-list li .dst-info {
+    font-size: 0.9em;
+    font-style: italic;
+}
+
 #add-timezone {
     display: flex;
     margin-top: 20px;
@@ -119,5 +132,14 @@ h1 {
     .btn {
         width: 100%;
         margin-bottom: 10px;
+    }
+
+    #timezone-list li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #timezone-list li span {
+        margin-bottom: 5px;
     }
 }
