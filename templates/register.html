@@ -8,30 +8,38 @@
 </head>
 <body>
     <div class="container">
-        <h1>Register</h1>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class="flashes">
-                {% for message in messages %}
-                <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        {% endwith %}
-        <form method="POST" action="{{ url_for('register') }}">
-            <div>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div>
-                <input type="submit" value="Register">
-            </div>
-        </form>
-        <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        <header>
+            <h1>Register</h1>
+        </header>
+        <main>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <section aria-label="Notifications">
+                    <ul class="flashes">
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+            {% endwith %}
+            <form method="POST" action="{{ url_for('register') }}">
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required autocomplete="username" minlength="3" maxlength="80">
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required autocomplete="new-password" minlength="8">
+                </div>
+                <div>
+                    <button type="submit">Register</button>
+                </div>
+            </form>
+        </main>
+        <footer>
+            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </footer>
     </div>
 </body>
 </html>
