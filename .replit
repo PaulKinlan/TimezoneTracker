@@ -67,6 +67,10 @@ args = "Check Migration Status"
 task = "workflow.run"
 args = "Generate Icons"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Remove generate_icons.py"
+
 [[workflows.workflow]]
 name = "Start Flask Server"
 author = "agent"
@@ -221,6 +225,17 @@ agentRequireRestartOnSave = false
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python generate_icons.py"
+
+[[workflows.workflow]]
+name = "Remove generate_icons.py"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "rm -f generate_icons.py"
 
 [deployment]
 run = ["sh", "-c", "python main.py"]

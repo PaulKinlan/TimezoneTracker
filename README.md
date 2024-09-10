@@ -10,9 +10,9 @@ This is a simple web application built with Flask that displays the current time
 
 This application is set up as a Progressive Web App (PWA). To complete the PWA setup:
 
-1. Replace the placeholder icon files with actual images:
-   - Replace `/static/icons/icon-192x192.txt` with a 192x192 pixel PNG image named `icon-192x192.png`.
-   - Replace `/static/icons/icon-512x512.txt` with a 512x512 pixel PNG image named `icon-512x512.png`.
+1. Ensure that the following icon files are present in the `/static/icons/` directory:
+   - `icon-192x192.png` (192x192 pixel PNG image)
+   - `icon-512x512.png` (512x512 pixel PNG image)
 
 2. Ensure that the `manifest.json` file in the `static` folder is correctly configured with the following content:
    ```json
