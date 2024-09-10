@@ -15,6 +15,54 @@ author = "agent"
 task = "workflow.run"
 args = "Start Flask Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Create Migration"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Initialize DB"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Set Environment Variables"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Set Flask App"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Check Flask App"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Migrate Database"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Remove Migrations"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Initialize and Migrate Database"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Initialize Database"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Create and Apply Migration"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Check PostgreSQL Environment Variables"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Check Migration Status"
+
 [[workflows.workflow]]
 name = "Start Flask Server"
 author = "agent"
@@ -27,8 +75,141 @@ task = "shell.exec"
 args = "python main.py"
 waitForPort = 5000
 
+[[workflows.workflow]]
+name = "Create Migration"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flask db init && flask db migrate -m 'initial migration' && flask db upgrade"
+
+[[workflows.workflow]]
+name = "Initialize DB"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flask db init"
+
+[[workflows.workflow]]
+name = "Set Environment Variables"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "export FLASK_APP=main.py && export FLASK_ENV=development"
+
+[[workflows.workflow]]
+name = "Set Flask App"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "export FLASK_APP=main.py"
+
+[[workflows.workflow]]
+name = "Check Flask App"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo $FLASK_APP"
+
+[[workflows.workflow]]
+name = "Migrate Database"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flask db init && flask db migrate -m 'initial migration' && flask db upgrade"
+
+[[workflows.workflow]]
+name = "Remove Migrations"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "rm -rf migrations"
+
+[[workflows.workflow]]
+name = "Initialize and Migrate Database"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flask db init && flask db migrate -m 'initial migration' && flask db upgrade"
+
+[[workflows.workflow]]
+name = "Initialize Database"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flask db init"
+
+[[workflows.workflow]]
+name = "Create and Apply Migration"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flask db migrate -m 'initial migration' && flask db upgrade"
+
+[[workflows.workflow]]
+name = "Check PostgreSQL Environment Variables"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo PGUSER: $PGUSER, PGDATABASE: $PGDATABASE, PGPORT: $PGPORT, PGHOST: $PGHOST"
+
+[[workflows.workflow]]
+name = "Check Migration Status"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "flask db current"
+
 [deployment]
 run = ["sh", "-c", "python main.py"]
+deploymentTarget = "cloudrun"
 
 [[ports]]
 localPort = 5000
