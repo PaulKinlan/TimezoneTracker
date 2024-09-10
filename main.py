@@ -41,11 +41,21 @@ def register():
         if existing_user:
             flash('Username already exists')
             return redirect(url_for('register'))
-        new_user = User(username=username, password=generate_password_hash(password, method='pbkdf2:sha256'))
+        
+        # Set default timezones for new users
+        default_timezones = ['America/New_York', 'Europe/London', 'Asia/Tokyo', 'Australia/Sydney']
+        new_user = User(
+            username=username, 
+            password=generate_password_hash(password, method='pbkdf2:sha256'),
+            timezones=json.dumps(default_timezones)
+        )
         db.session.add(new_user)
         db.session.commit()
-        flash('Registration successful. Please log in.')
-        return redirect(url_for('login'))
+        
+        # Automatically log in the new user
+        login_user(new_user)
+        flash('Registration successful. Default timezones have been added to your account.')
+        return redirect(url_for('index'))
     return render_template('register.html')
 
 @app.route("/login", methods=['GET', 'POST'])
