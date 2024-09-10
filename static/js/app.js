@@ -5,27 +5,52 @@ document.addEventListener('DOMContentLoaded', function() {
     const timezoneOptions = document.getElementById('timezone-options');
     const addTimezoneBtn = document.getElementById('add-timezone-btn');
 
+    let currentTimezones = [];
+    let initialTimezones = [];
+
     function updateCurrentTime() {
         const now = moment();
         currentTimeElement.textContent = `Current Time: ${now.format('YYYY-MM-DD HH:mm:ss')} (${now.format('Z')})`;
     }
 
     function addTimezone(timezone) {
-        const li = document.createElement('li');
-        li.innerHTML = `
-            <span>${timezone}</span>
-            <span class="time"></span>
-            <span class="dst-info"></span>
-            <button class="remove-btn">Remove</button>
-        `;
-        timezoneList.appendChild(li);
-        updateTimezones();
-        saveTimezone(timezone);
+        if (!currentTimezones.includes(timezone)) {
+            currentTimezones.push(timezone);
+            renderTimezones();
+            if (!arraysEqual(currentTimezones, initialTimezones)) {
+                saveTimezones();
+            }
+        }
+    }
 
-        li.querySelector('.remove-btn').addEventListener('click', function() {
-            li.remove();
-            removeTimezone(timezone);
+    function removeTimezone(timezone) {
+        const index = currentTimezones.indexOf(timezone);
+        if (index > -1) {
+            currentTimezones.splice(index, 1);
+            renderTimezones();
+            if (!arraysEqual(currentTimezones, initialTimezones)) {
+                saveTimezones();
+            }
+        }
+    }
+
+    function renderTimezones() {
+        timezoneList.innerHTML = '';
+        currentTimezones.forEach(timezone => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span>${timezone}</span>
+                <span class="time"></span>
+                <span class="dst-info"></span>
+                <button class="remove-btn">Remove</button>
+            `;
+            timezoneList.appendChild(li);
+
+            li.querySelector('.remove-btn').addEventListener('click', function() {
+                removeTimezone(timezone);
+            });
         });
+        updateTimezones();
     }
 
     function updateTimezones() {
@@ -37,9 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const time = moment().tz(timezone);
             timeElement.textContent = time.format('YYYY-MM-DD HH:mm:ss');
             
-            // Check if the timezone is currently observing DST
             const isDST = time.isDST();
-            const dstOffset = time.utcOffset() / 60; // Convert minutes to hours
+            const dstOffset = time.utcOffset() / 60;
             
             if (isDST) {
                 dstInfoElement.textContent = `DST: Yes (UTC${dstOffset >= 0 ? '+' : ''}${dstOffset})`;
@@ -60,13 +84,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function saveTimezone(timezone) {
+    function saveTimezones() {
         fetch('/save_timezones', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ timezones: [timezone] })
+            body: JSON.stringify({ timezones: currentTimezones })
         })
         .then(response => {
             if (response.status === 401) {
@@ -77,29 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(result => {
             console.log(result.message);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-
-    function removeTimezone(timezone) {
-        fetch('/save_timezones', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ timezones: [], removed: timezone })
-        })
-        .then(response => {
-            if (response.status === 401) {
-                window.location.href = '/login';
-                throw new Error('User not authenticated');
-            }
-            return response.json();
-        })
-        .then(result => {
-            console.log(result.message);
+            initialTimezones = [...currentTimezones];
         })
         .catch(error => {
             console.error('Error:', error);
@@ -118,14 +120,21 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(timezones => {
-            timezoneList.innerHTML = '';
-            if (timezones && timezones.length > 0) {
-                timezones.forEach(addTimezone);
-            }
+            currentTimezones = timezones;
+            initialTimezones = [...timezones];
+            renderTimezones();
         })
         .catch(error => {
             console.error('Error:', error);
         });
+    }
+
+    function arraysEqual(arr1, arr2) {
+        if (arr1.length !== arr2.length) return false;
+        for (let i = 0; i < arr1.length; i++) {
+            if (arr1[i] !== arr2[i]) return false;
+        }
+        return true;
     }
 
     if (addTimezoneBtn) {
@@ -149,5 +158,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
 
     updateCurrentTime();
-    updateTimezones();
 });

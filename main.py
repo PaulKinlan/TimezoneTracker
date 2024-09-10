@@ -42,7 +42,6 @@ def register():
             flash('Username already exists')
             return redirect(url_for('register'))
         
-        # Set default timezones for new users
         default_timezones = ['America/New_York', 'Europe/London', 'Asia/Tokyo', 'Australia/Sydney']
         new_user = User(
             username=username, 
@@ -52,7 +51,6 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         
-        # Automatically log in the new user
         login_user(new_user)
         flash('Registration successful. Default timezones have been added to your account.')
         return redirect(url_for('index'))
@@ -82,23 +80,9 @@ def logout():
 @login_required
 def save_timezones():
     data = request.json
-    timezones = data.get('timezones', [])
-    removed_timezone = data.get('removed')
+    new_timezones = data.get('timezones', [])
     
-    if current_user.timezones:
-        current_timezones = json.loads(current_user.timezones)
-    else:
-        current_timezones = []
-    
-    if removed_timezone:
-        if removed_timezone in current_timezones:
-            current_timezones.remove(removed_timezone)
-    else:
-        for timezone in timezones:
-            if timezone not in current_timezones:
-                current_timezones.append(timezone)
-    
-    current_user.timezones = json.dumps(current_timezones)
+    current_user.timezones = json.dumps(new_timezones)
     db.session.commit()
     return jsonify({"message": "Timezones updated successfully"}), 200
 
