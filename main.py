@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_from_directory
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -101,6 +101,10 @@ def test_db():
     except Exception as e:
         db.session.rollback()
         return f'Database connection failed: {str(e)}', 500
+
+@app.route('/sw.js')
+def service_worker():
+    return send_from_directory(app.static_folder, 'sw.js', mimetype='application/javascript')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

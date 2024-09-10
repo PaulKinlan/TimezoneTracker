@@ -3,11 +3,11 @@ const urlsToCache = [
   '/',
   '/static/css/styles.css',
   '/static/js/app.js',
+  '/static/js/moment.min.js',
+  '/static/js/moment-timezone-with-data.min.js',
   '/static/manifest.json',
   '/static/icons/icon-192x192.png',
-  '/static/icons/icon-512x512.png',
-  'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js'
+  '/static/icons/icon-512x512.png'
 ];
 
 self.addEventListener('install', function(event) {
