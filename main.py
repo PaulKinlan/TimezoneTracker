@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import json
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='static')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', os.urandom(24))
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 if app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
@@ -105,6 +105,14 @@ def test_db():
 @app.route('/sw.js')
 def service_worker():
     return send_from_directory(app.static_folder, 'sw.js', mimetype='application/javascript')
+
+@app.route('/manifest.json')
+def manifest():
+    return send_from_directory(app.static_folder, 'manifest.json', mimetype='application/json')
+
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(app.static_folder, filename)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

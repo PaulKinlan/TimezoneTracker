@@ -1,15 +1,15 @@
 // World Clock Service Worker
 // This service worker caches static assets for offline use
 
-const CACHE_NAME = 'world-clock-v4';
+const CACHE_NAME = 'world-clock-v5';
 const STATIC_ASSETS = [
-  '/static/css/styles.css',
-  '/static/js/app.js',
-  '/static/js/moment.min.js',
-  '/static/js/moment-timezone-with-data.min.js',
-  '/static/manifest.json',
-  '/static/icons/icon-192x192.png',
-  '/static/icons/icon-512x512.png'
+  'css/styles.css',
+  'js/app.js',
+  'js/moment.min.js',
+  'js/moment-timezone-with-data.min.js',
+  'manifest.json',
+  'icons/icon-192x192.png',
+  'icons/icon-512x512.png'
 ];
 
 self.addEventListener('install', function(event) {
@@ -24,8 +24,8 @@ self.addEventListener('install', function(event) {
 self.addEventListener('fetch', function(event) {
   if (event.request.method === 'GET') {
     const url = new URL(event.request.url);
-    const isStaticAsset = STATIC_ASSETS.includes(url.pathname) ||
-                          url.pathname.match(/^\/static\/.+\.(css|js|png|jpg|jpeg|gif|svg|ico)$/);
+    const isStaticAsset = STATIC_ASSETS.includes(url.pathname.slice(1)) ||
+                          url.pathname.match(/^\/(css|js|icons)\/.+\.(css|js|png|jpg|jpeg|gif|svg|ico)$/);
 
     if (isStaticAsset) {
       event.respondWith(
