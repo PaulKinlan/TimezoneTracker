@@ -63,6 +63,10 @@ args = "Check PostgreSQL Environment Variables"
 task = "workflow.run"
 args = "Check Migration Status"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Generate Icons"
+
 [[workflows.workflow]]
 name = "Start Flask Server"
 author = "agent"
@@ -206,6 +210,17 @@ agentRequireRestartOnSave = false
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "flask db current"
+
+[[workflows.workflow]]
+name = "Generate Icons"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python generate_icons.py"
 
 [deployment]
 run = ["sh", "-c", "python main.py"]
