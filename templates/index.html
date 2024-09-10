@@ -32,6 +32,17 @@
                 <button id='add-timezone-btn' class='btn'>Add Timezone</button>
             </div>
         {% else %}
+            <div class='app-description'>
+                <h2>Welcome to World Clock</h2>
+                <p>World Clock is a simple web application that allows you to:</p>
+                <ul>
+                    <li>View the current time in multiple timezones</li>
+                    <li>Add and remove timezones of your choice</li>
+                    <li>See daylight saving time (DST) information for each timezone</li>
+                    <li>Save your preferred timezones to your account</li>
+                </ul>
+                <p>To get started, please log in or create an account.</p>
+            </div>
             <div class='user-controls'>
                 <p><a href='{{ url_for('login') }}' class='btn btn-login'>Login</a> or <a href='{{ url_for('register') }}' class='btn btn-register'>Register</a></p>
             </div>
