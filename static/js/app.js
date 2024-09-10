@@ -5,13 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const timezoneOptions = document.getElementById('timezone-options');
     const addTimezoneBtn = document.getElementById('add-timezone-btn');
 
-    const popularTimezones = [
-        'America/New_York',
-        'Europe/London',
-        'Asia/Tokyo',
-        'Australia/Sydney'
-    ];
-
     function updateCurrentTime() {
         const now = moment();
         currentTimeElement.textContent = `Current Time: ${now.format('YYYY-MM-DD HH:mm:ss')} (${now.format('Z')})`;
@@ -128,15 +121,10 @@ document.addEventListener('DOMContentLoaded', function() {
             timezoneList.innerHTML = '';
             if (timezones && timezones.length > 0) {
                 timezones.forEach(addTimezone);
-            } else {
-                popularTimezones.forEach(addTimezone);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            if (error.message !== 'User not authenticated') {
-                popularTimezones.forEach(addTimezone);
-            }
         });
     }
 
